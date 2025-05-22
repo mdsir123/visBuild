@@ -1,4 +1,5 @@
-const Card = ({ props, onUpdate }) => {
+const Card = (props) => {
+  console.log(props)
 
     const handleChange = (e) =>{
         onUpdate({...props,[e.target.name] : e.target.value})

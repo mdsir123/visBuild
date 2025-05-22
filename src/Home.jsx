@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { ElementLibrary } from "./Components/ElementLibrary";
+import { textElementMap } from "./Components/text/TextElements";
+import SidebarElements from "./SidebarElements";
 
 const Home = () => {
   const [activeType, setActiveType] = useState("text");
@@ -7,23 +9,64 @@ const Home = () => {
 
   const handleAddElement = (element) => {
     const newElement = {
-        id: crypto.randomUUID(),
-        type: element.id,
-        component: element.component,
-        props:element.defaultProps,
-        style:{width:'50%', height:'auto'},
+      id: crypto.randomUUID(),
+      type: element.id,
+      component: element.component,
+      props: element.defaultProps,
+      style: {
+        width: "50%",
+        border: "2px dotted black",
+        borderRadius: "10px",
+        padding: "1rem",
+        height: "auto",
+      },
+    };
+    setCanvasElements((prev) => [...prev, newElement]);
+  };
+
+  const handleDragStart = (e, element) => {
+    const newElement = {
+      id: crypto.randomUUID(),
+      type: element.id,
+      style: {
+        width: "50%",
+        border: "2px dotted black",
+        borderRadius: "10px",
+        padding: "1rem",
+        height: "auto",
+      },
+    };
+    e.dataTransfer.setData("Dragdata", JSON.stringify(newElement));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const items = e.dataTransfer.getData("Dragdata");
+
+    if (items) {
+      const parsedItems = JSON.parse(items);
+      let elementObj = textElementMap[parsedItems.type];
+
+      if (!elementObj) return;
+
+      const fullElement = {
+        id: parsedItems.id,
+        type: parsedItems.type,
+        style: parsedItems.style,
+        props: elementObj.defaultProps,
+        component: elementObj.component,
+      };
+      setCanvasElements((prev) => [...prev, fullElement]);
     }
-    // console.log(newElement.component)
-
-    setCanvasElements((prev) => [...prev,newElement])
-
-  }
-
+  };
 
   return (
     <div className="mt-16">
-
-        {/* ELEMENT LIST */}
+      {/* ELEMENT LIST */}
       <ul className="menu bg-base-300 fixed  h-[90.85vh] p-2 [&>*]:my-2 z-50">
         <li>
           <a
@@ -41,7 +84,6 @@ const Home = () => {
             </svg>
           </a>
         </li>
-
         <li>
           <a
             className="tooltip tooltip-right"
@@ -91,7 +133,6 @@ const Home = () => {
             </svg>
           </a>
         </li>
-
         <li>
           <a
             className="tooltip tooltip-right"
@@ -104,19 +145,16 @@ const Home = () => {
               version="1.1"
               id="Capa_1"
               xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
+              // xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="-10.5 -10.5 370.92 370.92"
-              xml:space="preserve"
+              // xml:space="preserve"
               stroke="#000000"
-              stroke-width="15.7464"
+              strokeWidth="10"
             >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
               <g
                 id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
                 stroke="#CCCCCC"
-                stroke-width="5.59872"
               ></g>
               <g id="SVGRepo_iconCarrier">
                 {" "}
@@ -145,70 +183,40 @@ const Home = () => {
         </li>
       </ul>
 
-{/* ELEMENT-DOSPLAY & CANVAS */}
-
       <div className="max-w-[95vw] flex  ml-16">
-
         {/* ELEMENT DISPLAY */}
-
         <div className="w-[25%] ">
-          <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">
-            Most Used Components
-          </div>
+          <div className="p-4 pb-2 text-xs opacity-60 tracking-wide"> Most Used Components </div>
           <ul className="list bg-base-100 shadow-md min-h-[85vh]">
             {ElementLibrary[activeType].map((element) => {
               return (
-                <li className="list-row">
-                  <div className="list-col-grow">
-                    <div className="text-xl">{element.label}</div>
-                    <div className="text-xs uppercase font-semibold opacity-60">
-                      {element.id} tag
-                    </div>
-                  </div>
-
-                  <div className="list-col-wrap border-dashed border-1 rounded-2xl p-2">
-                    {/* <h1 className="text-3xl font-bold">Add a heading</h1> */}
-                    {element.preview}
-                  </div>
-                  {/* {console.log(element)} */}
-                  <button className="btn btn-square rounded-3xl btn-ghost" onClick={()=>handleAddElement(element)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
-                    </svg>
-                  </button>
-                </li>
+                <SidebarElements element={element} handleAddElement={handleAddElement} handleDragStart={handleDragStart} key={element.id}></SidebarElements>
               );
             })}
           </ul>
         </div>
 
-
         {/* CANVAS */}
-
         <div className="canvas-container  bg-base-200 p-10 fixed  h-[90.85vh] ml-[22.7rem] w-[72%]">
-            <div id="canvas" className="bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl ">
-                {
-                    canvasElements.map((elem)=>
-                        {
-                        const Component = elem.component;
-                        return (
-                            <div key={elem.id} style={elem.style}>
-                                <Component props={elem.props} onUpdate={(updateProps)=>{
-                                    setCanvasElements((prev)=> prev.map((e)=> e.id == elem.id ? {...e, props:updateProps} : e))
-                                }}/>
-                            </div>
+          <div id="canvas" className="bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl " onDragOver={handleDragOver} onDrop={handleDrop}>
+            {canvasElements.map((elem) => {
+              const Component = elem.component;
+              return (
+                <div key={elem.id} style={elem.style}>
+                  <Component
+                    {...elem.props} key={elem.id} onUpdate={(updateProps) => {
+                      setCanvasElements((prev) =>
+                        prev.map((e) =>
+                          e.id == elem.id ? { ...e, props: updateProps } : e
                         )
-                    })
-                }
-            </div>
-            {/* buttons */}
+                      );
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
-
       </div>
     </div>
   );
