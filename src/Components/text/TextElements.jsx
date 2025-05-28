@@ -27,6 +27,6 @@ export const TextElements = [
     },
 ]
 
-export const textElementMap = Object.fromEntries(
-  TextElements.map(el => [el.id, el])
-);
+// export const textElementMap = Object.fromEntries(
+//   TextElements.map(el => [el.id, el])
+// );

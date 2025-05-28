@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { ElementLibrary } from "./Components/ElementLibrary";
-import { textElementMap } from "./Components/text/TextElements";
+import { ElementLibrary, elementMap } from "./Components/ElementLibrary.js";
+// import { textElementMap } from "./Components/text/TextElements";
 import SidebarElements from "./SidebarElements";
+
 
 const Home = () => {
   const [activeType, setActiveType] = useState("text");
   const [canvasElements, setCanvasElements] = useState([]);
+
+
 
   const handleAddElement = (element) => {
     const newElement = {
@@ -49,7 +52,9 @@ const Home = () => {
 
     if (items) {
       const parsedItems = JSON.parse(items);
-      let elementObj = textElementMap[parsedItems.type];
+      let elementObj = elementMap[parsedItems.type];
+
+      console.log(elementObj) // For debugging purposes, you can remove this later
 
       if (!elementObj) return;
 
@@ -204,13 +209,13 @@ const Home = () => {
               return (
                 <div key={elem.id} style={elem.style}>
                   <Component
-                    {...elem.props} key={elem.id} onUpdate={(updateProps) => {
+                    {...elem.props} onUpdate={(updateProps) => {
                       setCanvasElements((prev) =>
                         prev.map((e) =>
                           e.id == elem.id ? { ...e, props: updateProps } : e
                         )
                       );
-                    }}
+                    }} key={elem.id}
                   />
                 </div>
               );

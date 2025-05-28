@@ -2,40 +2,6 @@ import React from "react";
 
 const SidebarElements = ({element, handleAddElement, handleDragStart}) => {
 
-//     const handleAddElement = (element) => {
-//     const newElement = {
-//       id: crypto.randomUUID(),
-//       type: element.id,
-//       component: element.component,
-//       props: element.defaultProps,
-//       style: {
-//         width: "50%",
-//         border: "2px dotted black",
-//         borderRadius: "10px",
-//         padding: "1rem",
-//         height: "auto",
-//       },
-//     };
-
-//     setCanvasElements((prev) => [...prev, newElement]);
-//   };
-
-//   const handleDragStart = (e, element) => {
-//     const newElement = {
-//       id: crypto.randomUUID(),
-//       type: element.id,
-//       style: {
-//         width: "50%",
-//         border: "2px dotted black",
-//         borderRadius: "10px",
-//         padding: "1rem",
-//         height: "auto",
-//       },
-//     };
-
-//     e.dataTransfer.setData("Dragdata", JSON.stringify(newElement));
-//   };
-
   return (
     <li className="list-row">
       <div className="list-col-grow">
