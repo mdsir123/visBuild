@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <div className="navbar fixed top-0 z-50 bg-base-100 bg-gradient-to-r from-purple-900 to-purple-700 text-white shadow-sm">
+    <div className="navbar fixed top-0 z-30 bg-base-100 bg-gradient-to-r from-purple-900 to-purple-700 text-white shadow-sm">
       <div className="flex-none">
         <button className="btn btn-square btn-ghost">
           <svg

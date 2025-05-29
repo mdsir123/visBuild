@@ -7,6 +7,13 @@ import SidebarElements from "./SidebarElements";
 const Home = () => {
   const [activeType, setActiveType] = useState("text");
   const [canvasElements, setCanvasElements] = useState([]);
+  const [preview, setPreview] = useState(false);
+
+  const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl"
+  const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl"
+
+  const canvasContainerStyle = "canvas-container bg-base-200 p-10 fixed h-[90.85vh] ml-[22.7rem] w-[72%]"
+  const previewContainerStyle = "mockup-window bg-base-300 rounded-none absolute w-full px-15 -ml-[4rem] -mt-16 z-[100] [&>button]:ml-[80rem] [&>button]:btn-error"
 
 
 
@@ -72,7 +79,7 @@ const Home = () => {
   return (
     <div className="mt-16">
       {/* ELEMENT LIST */}
-      <ul className="menu bg-base-300 fixed  h-[90.85vh] p-2 [&>*]:my-2 z-50">
+      <ul className="menu bg-base-300 fixed  h-[90.85vh] p-2 [&>*]:my-2 z-0">
         <li>
           <a
             className="tooltip tooltip-right"
@@ -191,7 +198,7 @@ const Home = () => {
       <div className="max-w-[95vw] flex  ml-16">
         {/* ELEMENT DISPLAY */}
         <div className="w-[25%] ">
-          <div className="p-4 pb-2 text-xs opacity-60 tracking-wide"> Most Used Components </div>
+          <div className="p-4 pb-2  text-xs opacity-60 tracking-wide"> Most Used Components </div>
           <ul className="list bg-base-100 shadow-md min-h-[85vh]">
             {ElementLibrary[activeType].map((element) => {
               return (
@@ -202,8 +209,8 @@ const Home = () => {
         </div>
 
         {/* CANVAS */}
-        <div className="canvas-container  bg-base-200 p-10 fixed  h-[90.85vh] ml-[22.7rem] w-[72%]">
-          <div id="canvas" className="bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl " onDragOver={handleDragOver} onDrop={handleDrop}>
+        <div className={preview ? previewContainerStyle : canvasContainerStyle}>
+          <div id="canvas" className={preview ? previewStyle : canvasStyle} onDragOver={handleDragOver} onDrop={handleDrop}>
             {canvasElements.map((elem) => {
               const Component = elem.component;
               return (
@@ -221,6 +228,17 @@ const Home = () => {
               );
             })}
           </div>
+          <button onClick={() => setPreview(prev => !prev)} className="btn btn-sm btn-primary m-4 mx-2 w-32 rounded-xl float-end">
+          {/* <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-[1.2em]"
+          >
+            <path d="M3 19H21V21H3V19ZM13 5.82843V17H11V5.82843L4.92893 11.8995L3.51472 10.4853L12 2L20.4853 10.4853L19.0711 11.8995L13 5.82843Z"></path>
+          </svg> */}
+          {preview ? "Close Preview" : "Live Preview"}
+        </button>
         </div>
       </div>
     </div>
