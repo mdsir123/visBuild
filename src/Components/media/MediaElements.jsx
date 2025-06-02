@@ -10,7 +10,7 @@ export const MediaElements = [
     defaultProps: {
       src: "https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp",
       alt: "shoes",
-      className: "w-[25%]",
+      className: "w-[100%] ",
     },
     preview: (
       <img

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Navbar = () => {
+const Navbar = ({handleExport}) => {
   return (
     <div className="navbar fixed top-0 z-30 bg-base-100 bg-gradient-to-r from-purple-900 to-purple-700 text-white shadow-sm">
       <div className="flex-none">
@@ -25,7 +25,8 @@ const Navbar = () => {
         <a style={{fontFamily:'syne'}} className="btn btn-ghost text-xl text-lime-500 hover:text-purple-900 font-black">visBuild</a>
       </div>
       <div className="flex-none">
-        <button className="btn mx-2 rounded-xl">
+        <button className="btn mx-2 rounded-xl" 
+        onClick={handleExport}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

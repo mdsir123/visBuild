@@ -12,7 +12,7 @@ const SidebarElements = ({element, handleAddElement, handleDragStart}) => {
       </div>
 
       <div
-        className="list-col-wrap border-dashed border-1 rounded-2xl p-2"
+        className="list-col-wrap border-dashed border-1 rounded-2xl p-2 inline-block max-w-fit" 
         draggable={true}
         onDragStart={(e) => handleDragStart(e, element)}
       >

@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { ElementLibrary, elementMap } from "./Components/ElementLibrary.js";
 // import { textElementMap } from "./Components/text/TextElements";
 import SidebarElements from "./SidebarElements";
 
 
-const Home = () => {
+const Home = ({setCanvasHTML}) => {
   const [activeType, setActiveType] = useState("text");
   const [canvasElements, setCanvasElements] = useState([]);
   const [preview, setPreview] = useState(false);
+
+  const [elements, setElements] = useState([]);
 
   const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl"
   const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl"
@@ -24,11 +26,16 @@ const Home = () => {
       component: element.component,
       props: element.defaultProps,
       style: {
-        width: "50%",
+        width: "fit-content",
+        display: "inline-block",
+        maxWidth: "40%",
+        boxSizing: "border-box",
+
         border: "2px dotted black",
         borderRadius: "10px",
         padding: "1rem",
         height: "auto",
+        margin:"1% auto",
       },
     };
     setCanvasElements((prev) => [...prev, newElement]);
@@ -39,11 +46,16 @@ const Home = () => {
       id: crypto.randomUUID(),
       type: element.id,
       style: {
-        width: "50%",
+        width: "fit-content",
+        display: "inline-block",
+        maxWidth: "40%",
+        boxSizing: "border-box",
+
         border: "2px dotted black",
         borderRadius: "10px",
         padding: "1rem",
         height: "auto",
+        margin:"1% auto",
       },
     };
     e.dataTransfer.setData("Dragdata", JSON.stringify(newElement));
@@ -73,8 +85,19 @@ const Home = () => {
         component: elementObj.component,
       };
       setCanvasElements((prev) => [...prev, fullElement]);
+      const newElement = { items, style: "margin: 10px;" }; // simple styles for demo
+      const updatedElements = [...elements, newElement];
+      setElements(updatedElements);
     }
   };
+
+  useEffect(() => {
+    // Update parent with current canvas HTML
+    const canvasDiv = document.getElementById("canvas");
+    if (canvasDiv) {
+      setCanvasHTML(canvasDiv.innerHTML);
+    }
+  }, [elements, setCanvasHTML]);
 
   return (
     <div className="mt-16">
@@ -210,7 +233,7 @@ const Home = () => {
 
         {/* CANVAS */}
         <div className={preview ? previewContainerStyle : canvasContainerStyle}>
-          <div id="canvas" className={preview ? previewStyle : canvasStyle} onDragOver={handleDragOver} onDrop={handleDrop}>
+          <div id="canvas" className={`${preview ? previewStyle : canvasStyle} flex flex-wrap gap-1 items-start`} onDragOver={handleDragOver} onDrop={handleDrop}>  { /* canvas flex  */}
             {canvasElements.map((elem) => {
               const Component = elem.component;
               return (
