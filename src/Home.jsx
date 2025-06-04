@@ -9,7 +9,7 @@ const Home = ({setCanvasHTML}) => {
   const [canvasElements, setCanvasElements] = useState([]);
   const [preview, setPreview] = useState(false);
 
-  const [elements, setElements] = useState([]);
+  const [elements, setElements] = useState([]);          {/* export functionality array */}
 
   const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl"
   const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl"
@@ -39,6 +39,9 @@ const Home = ({setCanvasHTML}) => {
       },
     };
     setCanvasElements((prev) => [...prev, newElement]);
+    
+    const newExportElement = { items: JSON.stringify(newElement), style: "margin: 10px;" };
+    setElements((prev) => [...prev, newExportElement]);
   };
 
   const handleDragStart = (e, element) => {
@@ -91,7 +94,7 @@ const Home = ({setCanvasHTML}) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => {                               {/* export elements */}
     // Update parent with current canvas HTML
     const canvasDiv = document.getElementById("canvas");
     if (canvasDiv) {
