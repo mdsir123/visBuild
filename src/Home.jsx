@@ -1,24 +1,26 @@
-import React, { useState,useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ElementLibrary, elementMap } from "./Components/ElementLibrary.js";
-// import { textElementMap } from "./Components/text/TextElements";
 import SidebarElements from "./SidebarElements";
+import Canvas from "./Canvas.jsx";
+import { CanvasElementStore } from "./utils/CanvasElementController.jsx";
 
-
-const Home = ({setCanvasHTML}) => {
+const Home = ({ setCanvasHTML }) => {
   const [activeType, setActiveType] = useState("text");
-  const [canvasElements, setCanvasElements] = useState([]);
+  const { canvasElements, setCanvasElements } = useContext(CanvasElementStore);
   const [preview, setPreview] = useState(false);
 
-  const [elements, setElements] = useState([]);          {/* export functionality array */}
+  const [elements, setElements] = useState([]);
+  // export functionality array
 
-  const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl"
-  const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl"
+  const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl";
+  const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl";
 
-  const canvasContainerStyle = "canvas-container bg-base-200 p-10 fixed h-[90.85vh] ml-[22.7rem] w-[72%]"
-  const previewContainerStyle = "mockup-window bg-base-300 rounded-none absolute w-full px-15 -ml-[4rem] -mt-16 z-[100] [&>button]:ml-[80rem] [&>button]:btn-error"
+  const canvasContainerStyle =
+    "canvas-container bg-base-200 p-10 fixed h-[90.85vh] ml-[22.7rem] w-[72%]";
+  const previewContainerStyle =
+    "mockup-window bg-base-300 rounded-none absolute w-full px-15 -ml-[4rem] -mt-16 z-[100] [&>button]:ml-[80rem] [&>button]:btn-error";
 
-
-
+  // ADD ELEMENT TO CANVAS USING BUTTON
   const handleAddElement = (element) => {
     const newElement = {
       id: crypto.randomUUID(),
@@ -26,21 +28,21 @@ const Home = ({setCanvasHTML}) => {
       component: element.component,
       props: element.defaultProps,
       style: {
-        width: "fit-content",
-        display: "inline-block",
-        maxWidth: "40%",
         boxSizing: "border-box",
-
         border: "2px dotted black",
         borderRadius: "10px",
         padding: "1rem",
-        height: "auto",
-        margin:"1% auto",
+        margin: "10px",
       },
+      isContainer: element.isContainer,
+      children: element.children,
     };
     setCanvasElements((prev) => [...prev, newElement]);
-    
-    const newExportElement = { items: JSON.stringify(newElement), style: "margin: 10px;" };
+
+    const newExportElement = {
+      items: JSON.stringify(newElement),
+      style: "margin: 10px;",
+    };
     setElements((prev) => [...prev, newExportElement]);
   };
 
@@ -48,35 +50,66 @@ const Home = ({setCanvasHTML}) => {
     const newElement = {
       id: crypto.randomUUID(),
       type: element.id,
+      props: element.defaultProps,
       style: {
-        width: "fit-content",
-        display: "inline-block",
-        maxWidth: "40%",
         boxSizing: "border-box",
-
         border: "2px dotted black",
         borderRadius: "10px",
         padding: "1rem",
-        height: "auto",
-        margin:"1% auto",
+        margin: "10px",
       },
+      isContainer: element.isContainer,
+      children: element.children,
     };
     e.dataTransfer.setData("Dragdata", JSON.stringify(newElement));
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
+  const popDraggedElement = (canvasElements, draggedId) => {
+    for (let el of canvasElements) {
+      if (el.id === draggedId) {
+        return {
+          updated: canvasElements.filter((el) => el.id !== draggedId),
+          extracted: el,
+        };
+      }
+      if (el.children && el.children.length > 0) {
+        const result = popDraggedElement(el.children, draggedId);
+        if (result) {
+          return {
+            // updated: canvasElements.map((e) => {
+            //   if (e.id === el.id) {
+            //     return {
+            //       ...e,
+            //       children: result.updated,
+            //     };
+            //   }
+            //   return e;
+            // }),
+            updated : canvasElements.map(e=>(e.id === el.id)?{...e,children:result.updated}:e),
+            extracted: result.extracted,
+          };
+        }
+      }
+    }
+    return null;
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    const draggedId = e.dataTransfer.getData("elementId");
+
+    if (draggedId) {
+      const result = popDraggedElement(canvasElements, draggedId);
+      if (result) setCanvasElements([...result.updated, result.extracted]);
+    }
+
     const items = e.dataTransfer.getData("Dragdata");
 
     if (items) {
       const parsedItems = JSON.parse(items);
       let elementObj = elementMap[parsedItems.type];
-
-      console.log(elementObj) // For debugging purposes, you can remove this later
 
       if (!elementObj) return;
 
@@ -84,9 +117,11 @@ const Home = ({setCanvasHTML}) => {
         id: parsedItems.id,
         type: parsedItems.type,
         style: parsedItems.style,
-        props: elementObj.defaultProps,
+        props: parsedItems.props,
         component: elementObj.component,
+        isContainer: parsedItems.isContainer,
       };
+
       setCanvasElements((prev) => [...prev, fullElement]);
       const newElement = { items, style: "margin: 10px;" }; // simple styles for demo
       const updatedElements = [...elements, newElement];
@@ -94,7 +129,10 @@ const Home = ({setCanvasHTML}) => {
     }
   };
 
-  useEffect(() => {                               {/* export elements */}
+  useEffect(() => {
+    {
+      /* export elements */
+    }
     // Update parent with current canvas HTML
     const canvasDiv = document.getElementById("canvas");
     if (canvasDiv) {
@@ -104,6 +142,7 @@ const Home = ({setCanvasHTML}) => {
 
   return (
     <div className="mt-16">
+
       {/* ELEMENT LIST */}
       <ul className="menu bg-base-300 fixed  h-[90.85vh] p-2 [&>*]:my-2 z-0">
         <li>
@@ -190,10 +229,7 @@ const Home = ({setCanvasHTML}) => {
               strokeWidth="10"
             >
               <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke="#CCCCCC"
-              ></g>
+              <g id="SVGRepo_tracerCarrier" stroke="#CCCCCC"></g>
               <g id="SVGRepo_iconCarrier">
                 {" "}
                 <g id="XMLID_334_">
@@ -222,13 +258,21 @@ const Home = ({setCanvasHTML}) => {
       </ul>
 
       <div className="max-w-[95vw] flex  ml-16">
+
         {/* ELEMENT DISPLAY */}
         <div className="w-[25%] ">
-          <div className="p-4 pb-2  text-xs opacity-60 tracking-wide"> Most Used Components </div>
+          <div className="p-4 pb-2  text-xs opacity-60 tracking-wide">
+            Most Used Components
+          </div>
           <ul className="list bg-base-100 shadow-md min-h-[85vh]">
             {ElementLibrary[activeType].map((element) => {
               return (
-                <SidebarElements element={element} handleAddElement={handleAddElement} handleDragStart={handleDragStart} key={element.id}></SidebarElements>
+                <SidebarElements
+                  element={element}
+                  handleAddElement={handleAddElement}
+                  handleDragStart={handleDragStart}
+                  key={element.id}
+                ></SidebarElements>
               );
             })}
           </ul>
@@ -236,35 +280,25 @@ const Home = ({setCanvasHTML}) => {
 
         {/* CANVAS */}
         <div className={preview ? previewContainerStyle : canvasContainerStyle}>
-          <div id="canvas" className={`${preview ? previewStyle : canvasStyle} flex flex-wrap gap-1 items-start`} onDragOver={handleDragOver} onDrop={handleDrop}>  { /* canvas flex  */}
-            {canvasElements.map((elem) => {
-              const Component = elem.component;
-              return (
-                <div key={elem.id} style={elem.style}>
-                  <Component
-                    {...elem.props} onUpdate={(updateProps) => {
-                      setCanvasElements((prev) =>
-                        prev.map((e) =>
-                          e.id == elem.id ? { ...e, props: updateProps } : e
-                        )
-                      );
-                    }} key={elem.id}
-                  />
-                </div>
-              );
-            })}
+          <div
+            id="canvas"
+            className={`${
+              preview ? previewStyle : canvasStyle
+            } flex flex-wrap gap-1 items-start`}
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+          >  
+            {canvasElements.map((el) => (
+              
+              <Canvas element={el} key={el.id} />
+            ))}
           </div>
-          <button onClick={() => setPreview(prev => !prev)} className="btn btn-sm btn-primary m-4 mx-2 w-32 rounded-xl float-end">
-          {/* <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-[1.2em]"
+          <button
+            onClick={() => setPreview((prev) => !prev)}
+            className="btn btn-sm btn-primary m-4 mx-2 w-32 rounded-xl float-end"
           >
-            <path d="M3 19H21V21H3V19ZM13 5.82843V17H11V5.82843L4.92893 11.8995L3.51472 10.4853L12 2L20.4853 10.4853L19.0711 11.8995L13 5.82843Z"></path>
-          </svg> */}
-          {preview ? "Close Preview" : "Live Preview"}
-        </button>
+            {preview ? "Close Preview" : "Live Preview"}
+          </button>
         </div>
       </div>
     </div>
