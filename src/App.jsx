@@ -2,33 +2,52 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Home from "./Home";
+import CanvasElementController from "./components//utils/CanvasElementController";
 
 const App = () => {
-  const [canvasHTML, setCanvasHTML] = useState("");
-                                                        {/* export function */}
-  const exportHTMLAndCSS = () => {
-    if (!canvasHTML || canvasHTML.trim()===""){
-      return;
-    };
+  
+  // removed canvasHTML useState for optim ising the code
 
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = canvasHTML;
+  // Shared utility function
+  const serializeElement = (element, indent = 2) => {
+    if (element.nodeType !== 1) return ''; // skip non-element nodes
+
+    const tag = element.tagName.toLowerCase();
+    const style = element.getAttribute("style") || "";
+    const styleAttr = style ? ` style="${style}"` : "";
+    const indentStr = ' '.repeat(indent);
+
+    let html = `${indentStr}<${tag}${styleAttr}>\n`;
+
+    for (let child of element.childNodes) {
+      if (child.nodeType === 1) {
+        html += serializeElement(child, indent + 2);
+      } else if (child.nodeType === 3) {
+        const text = child.textContent.trim();
+        if (text) {
+          html += `${' '.repeat(indent + 2)}${text}\n`;
+        }
+      }
+    }
+
+    html += `${indentStr}</${tag}>\n`;
+    return html;
+  };
+
+  const exportHTMLAndCSS = () => {
+    const canvas = document.getElementById("canvas");
+    if (!canvas) return;
 
     let htmlString =
       "<!DOCTYPE html>\n<html>\n<head>\n<meta charset='UTF-8'>\n<title>Exported Canvas</title>\n</head>\n<body>\n";
 
-    Array.from(tempDiv.children).forEach((child) => {
-      const tagName = child.tagName.toLowerCase();
-      const style = child.getAttribute("style") || "";
-      const styleAttr = style ? ` style="${style}"` : "";
-      const innerHTML = child.innerHTML || "";
-
-      htmlString += `  <${tagName}${styleAttr}>\n    ${innerHTML}\n  </${tagName}>\n`;
-    });
+    for (let child of canvas.children) {
+      htmlString += serializeElement(child);
+    }
 
     htmlString += "</body>\n</html>";
 
-    const blob = new Blob([htmlString], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([htmlString], { type: "text/html;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -42,7 +61,9 @@ const App = () => {
   return (
     <>
       <Navbar handleExport={exportHTMLAndCSS} />
-      <Home setCanvasHTML={setCanvasHTML} />
+      <CanvasElementController>
+        <Home />
+      </CanvasElementController>
     </>
   );
 };

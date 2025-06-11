@@ -1,10 +1,21 @@
+import Container from "./Container";
 import Footer from "./Footer";
 import Hero from "./Hero";
 
 export const LayoutElements = [
   {
+      id: 'div',
+      label:"Div Container",
+      type: 'container',
+      component: Container,
+      defaultProps: { tag: 'div', className: "min-w-[150px] rounded-lg min-h-[75px] flex flex-col border-1 border-dashed p-2 m-2" },
+      preview:<div className="min-w-[150px] rounded-lg min-h-[75px] flex flex-col border-1 border-dashed p-2 m-2">This is div container</div>,
+      isContainer: true,
+      children: []
+  },
+  {
     id: "footer",
-    label: "layout",
+    label: "Footer",
     type: "layout",
     component: Footer,
     defaultProps: {},
