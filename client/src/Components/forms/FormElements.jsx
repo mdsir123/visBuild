@@ -14,6 +14,8 @@ export const FormElements = [
       className: "input",
     },
     preview: <input type="text" placeholder="Type here" className="input" />,
+    isContainer: false,
+    children: []
   },
   {
     id: "email-input",
@@ -26,6 +28,8 @@ export const FormElements = [
       className: "input",
     },
     preview: <input type="email" placeholder="Type Email here" className="input" />,
+    isContainer: false,
+    children: []
   },
   {
     id: "password-input",
@@ -38,6 +42,8 @@ export const FormElements = [
       className: "input",
     },
     preview: <input type="password" placeholder="Password" className="input" />,
+    isContainer: false,
+    children: []
   },
   {
     id: "search-input",
@@ -50,6 +56,8 @@ export const FormElements = [
       className: "input",
     },
     preview: <input type="search" required placeholder="Search here" className="input" />,
+    isContainer: false,
+    children: []
   },
   {
     id: "checkbox-input",
@@ -62,6 +70,8 @@ export const FormElements = [
       className: "checkbox",
     },
     preview: <input type="checkbox" placeholder="" className="checkbox" />,
+    isContainer: false,
+    children: []
   },
   {
     id: "textare",
@@ -74,6 +84,8 @@ export const FormElements = [
       className: "textarea", 
     },
     preview: <textarea className="textarea" placeholder="Bio"></textarea>,
+    isContainer: false,
+    children: []
   },
   {
     id: "fieldset",
@@ -97,5 +109,7 @@ export const FormElements = [
         <button className="btn btn-neutral mt-4">Login</button>
       </fieldset>
     ),
+    isContainer: false,
+    children: []
   },
 ];

@@ -1,6 +1,24 @@
-const LoginForm = ({ className }) => {
+const LoginForm = ({
+  className,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  style,
+  draggable,
+  ...props
+}) => {
   return (
-    <fieldset className={className}>
+    <fieldset
+      className={className}
+      style={style}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      {...props}
+    >
       <legend className="fieldset-legend">Login</legend>
 
       <label className="label">Email</label>

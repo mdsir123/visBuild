@@ -1,8 +1,24 @@
 import React from "react";
 
-function Hero() {
+const Hero = ({
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  style,
+  draggable,
+  ...props
+}) => {
   return (
-    <div>
+    <div
+      style={style}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      {...props}
+    >
       <div
         className="hero h-[50%] min-w-full"
         style={{

@@ -1,11 +1,21 @@
-import React from 'react'
+import React from "react";
 
-
-const Text = ({ tag, text, className, onDragStart, onDragOver, onDragLeave, onDrop, style, draggable, ...props }) => {
+const Text = ({
+  tag,
+  text,
+  className,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  style,
+  draggable,
+  ...props
+}) => {
   const Tag = tag;
   return (
-    <Tag 
-      className={className} 
+    <Tag
+      className={className}
       contentEditable={true}
       style={style}
       draggable={draggable}
@@ -20,4 +30,4 @@ const Text = ({ tag, text, className, onDragStart, onDragOver, onDragLeave, onDr
   );
 };
 
-export default Text
+export default Text;

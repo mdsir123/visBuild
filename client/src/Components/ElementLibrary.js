@@ -1,14 +1,14 @@
 import { MediaElements } from "./media/MediaElements"
 import { TextElements } from "./text/TextElements"
 import { FormElements } from "./forms/FormElements"
-import { buttons } from "./Button/buttonElements"
+import { ButtonElements } from "./Button/buttonElements"
 import { LayoutElements } from "./Layout/LayoutElements"
 
 export const ElementLibrary = {
     text: TextElements,
     media: MediaElements,
     forms: FormElements,
-    buttons:buttons,
+    buttons: ButtonElements,
     layout:LayoutElements,
     
 }

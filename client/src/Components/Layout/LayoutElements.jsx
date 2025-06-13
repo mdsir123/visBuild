@@ -74,6 +74,8 @@ export const LayoutElements = [
         </footer>
       </div>
     ),
+    isContainer: false,
+    children: []
   },
 
   {
@@ -106,5 +108,7 @@ export const LayoutElements = [
         </div>
       </div>
     ),
+    isContainer: false,
+    children: []
   },
 ];

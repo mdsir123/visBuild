@@ -1,6 +1,6 @@
 import Button from "./Button.jsx";
 
-export const buttons=[
+export const ButtonElements = [
     {
     id: "primary-btn",
     label: "buttons",
@@ -13,6 +13,8 @@ export const buttons=[
     preview: (
       <button className="btn btn-primary w-[6vw]">Primary</button>
     ),
+    isContainer: false,
+    children: []
   },
 
   {
@@ -27,6 +29,8 @@ export const buttons=[
     preview: (
       <button className="btn btn-success w-[6vw]">Success</button>
     ),
+    isContainer: false,
+    children: []
   },
 
   {
@@ -41,6 +45,8 @@ export const buttons=[
     preview: (
       <button className="btn btn-warning w-[6vw]">Warning</button>
     ),
+    isContainer: false,
+    children: []
   },
 
   {
@@ -55,6 +61,8 @@ export const buttons=[
     preview: (
       <button className="btn btn-error w-[6vw]">Error</button>
     ),
+    isContainer: false,
+    children: []
   },
 
 ]

@@ -2,23 +2,22 @@ import { useState, useContext, useEffect } from "react";
 import { ElementLibrary, elementMap } from "./Components/ElementLibrary.js";
 import SidebarElements from "./SidebarElements";
 import Canvas from "./Canvas.jsx";
-import { CanvasElementStore } from "./utils/CanvasElementController.jsx";
+import { CanvasElementStore } from "./components/utils/CanvasElementController.jsx";
 
-const Home = ({ setCanvasHTML }) => {
+const Home = () => {
   const [activeType, setActiveType] = useState("text");
   const { canvasElements, setCanvasElements } = useContext(CanvasElementStore);
   const [preview, setPreview] = useState(false);
-
   const [elements, setElements] = useState([]);
   // export functionality array
 
-  const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl";
-  const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl";
+  const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl overflow-y-scroll";
+  const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl overflow-y-scroll";
 
   const canvasContainerStyle =
     "canvas-container bg-base-200 p-10 fixed h-[90.85vh] ml-[22.7rem] w-[72%]";
   const previewContainerStyle =
-    "mockup-window bg-base-300 rounded-none absolute w-full px-15 -ml-[4rem] -mt-16 z-[100] [&>button]:ml-[80rem] [&>button]:btn-error";
+    "mockup-window bg-base-300 rounded-none absolute w-[100vw] overflow-x-hidden px-15 -mt-16 z-[100] [&>button]:ml-[80rem] [&>button]:btn-error";
 
   // ADD ELEMENT TO CANVAS USING BUTTON
   const handleAddElement = (element) => {
@@ -29,7 +28,8 @@ const Home = ({ setCanvasHTML }) => {
       props: element.defaultProps,
       style: {
         boxSizing: "border-box",
-        border: "2px dotted black",
+        borderWidth: "2px",
+        borderStyle: "dotted",
         borderRadius: "10px",
         padding: "1rem",
         margin: "10px",
@@ -53,7 +53,8 @@ const Home = ({ setCanvasHTML }) => {
       props: element.defaultProps,
       style: {
         boxSizing: "border-box",
-        border: "2px dotted black",
+        borderWidth: "2px",
+        borderStyle: "dotted",
         borderRadius: "10px",
         padding: "1rem",
         margin: "10px",
@@ -129,16 +130,7 @@ const Home = ({ setCanvasHTML }) => {
     }
   };
 
-  useEffect(() => {
-    {
-      /* export elements */
-    }
-    // Update parent with current canvas HTML
-    const canvasDiv = document.getElementById("canvas");
-    if (canvasDiv) {
-      setCanvasHTML(canvasDiv.innerHTML);
-    }
-  }, [elements, setCanvasHTML]);
+  // removed useEffect for optimising export
 
   return (
     <div className="mt-16">
@@ -257,11 +249,11 @@ const Home = ({ setCanvasHTML }) => {
         </li>
       </ul>
 
-      <div className="max-w-[95vw] flex  ml-16">
+      <div className={preview? `w-[100vw] h-[90vh] flex overflow-hidden`:`max-w-[95vw] flex  ml-16`}>
 
         {/* ELEMENT DISPLAY */}
         <div className="w-[25%] ">
-          <div className="p-4 pb-2  text-xs opacity-60 tracking-wide">
+          <div className="p-4 pb-2  text-xs opacity-60 ">
             Most Used Components
           </div>
           <ul className="list bg-base-100 shadow-md min-h-[85vh]">
@@ -290,7 +282,7 @@ const Home = ({ setCanvasHTML }) => {
           >  
             {canvasElements.map((el) => (
               
-              <Canvas element={el} key={el.id} />
+              <Canvas element={el} key={el.id} preview={preview} />
             ))}
           </div>
           <button

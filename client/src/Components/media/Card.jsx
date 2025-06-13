@@ -1,29 +1,38 @@
-const Card = ({onUpdate, ...props}) => {
+const Card = ({
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  style,
+  draggable,
+  ...props
+}) => {
   //e.log(props)
 
-    const handleChange = (e) =>{
-        onUpdate({...props,[e.target.name] : e.target.value})
-    }
   return (
-    <div className="card bg-base-100 w-[100%] shadow-sm">
+    <div className="card bg-base-100 w-[40%] shadow-sm"
+    style={style}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+    >
       <figure>
-        <img
-          src={props.imgUrl}
-          alt={props.alt}
-        />
+        <img src={props.imgUrl} alt={props.alt} />
       </figure>
       <div className="card-body">
         <input
           type="text"
           value={props.title}
           className="text-lg font-semibold"
-          onChange={handleChange}
+          // onChange={handleChange}
         />
         <textarea
           name="description"
           className="border-none resize-none h-16"
           value={props.description}
-          onChange={handleChange}
+          // onChange={handleChange}
         ></textarea>
         {/* <h2 className="card-title">Card Title</h2> */}
         {/* <p>A card component has a figure, a body part, and inside body there are title and actions parts</p> */}
