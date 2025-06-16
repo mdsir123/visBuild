@@ -1,18 +1,24 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { ElementLibrary, elementMap } from "./Components/ElementLibrary.js";
 import SidebarElements from "./SidebarElements";
 import Canvas from "./Canvas.jsx";
 import { CanvasElementStore } from "./components/utils/CanvasElementController.jsx";
+import StylingPanel from "./Components/utils/StylingPanel.jsx";
 
 const Home = () => {
   const [activeType, setActiveType] = useState("text");
   const { canvasElements, setCanvasElements } = useContext(CanvasElementStore);
   const [preview, setPreview] = useState(false);
   const [elements, setElements] = useState([]);
+  const [selectedElement, setSelectedElement] = useState(null);
+  // const canvasRef = useRef(null);
+
   // export functionality array
 
-  const canvasStyle = "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl overflow-y-scroll";
-  const previewStyle = "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl overflow-y-scroll";
+  const canvasStyle =
+    "bg-base-100 h-[95%] shadow-xl p-4  rounded-2xl overflow-y-scroll";
+  const previewStyle =
+    "bg-base-100 h-[84.5vh] shadow-xl p-4  rounded-2xl overflow-y-scroll";
 
   const canvasContainerStyle =
     "canvas-container bg-base-200 p-10 fixed h-[90.85vh] ml-[22.7rem] w-[72%]";
@@ -31,7 +37,7 @@ const Home = () => {
         borderWidth: "2px",
         borderStyle: "dotted",
         borderRadius: "10px",
-        padding: "1rem",
+        padding: "16px 16px",
         margin: "10px",
       },
       isContainer: element.isContainer,
@@ -56,8 +62,9 @@ const Home = () => {
         borderWidth: "2px",
         borderStyle: "dotted",
         borderRadius: "10px",
-        padding: "1rem",
+        padding: "16px 16px",
         margin: "10px",
+        // width:"fit-content",
       },
       isContainer: element.isContainer,
       children: element.children,
@@ -77,16 +84,9 @@ const Home = () => {
         const result = popDraggedElement(el.children, draggedId);
         if (result) {
           return {
-            // updated: canvasElements.map((e) => {
-            //   if (e.id === el.id) {
-            //     return {
-            //       ...e,
-            //       children: result.updated,
-            //     };
-            //   }
-            //   return e;
-            // }),
-            updated : canvasElements.map(e=>(e.id === el.id)?{...e,children:result.updated}:e),
+            updated: canvasElements.map((e) =>
+              e.id === el.id ? { ...e, children: result.updated } : e
+            ),
             extracted: result.extracted,
           };
         }
@@ -95,10 +95,27 @@ const Home = () => {
     return null;
   };
 
+  const updateElementsById = (canvasElements, targetId, updateFn) => {
+    return canvasElements.map((el) => {
+      if (el.id === targetId) {
+        return updateFn(el);
+      }
+
+      if (el.children && el.children.length > 0) {
+        return {
+          ...el,
+          children: updateElementsById(el.children, targetId, updateFn),
+        };
+      }
+
+      return el;
+    });
+  };
+
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const draggedId = e.dataTransfer.getData("elementId");
 
     if (draggedId) {
@@ -130,11 +147,38 @@ const Home = () => {
     }
   };
 
-  // removed useEffect for optimising export
+  
+
+  const updateElementStyle = (newStyle) => {
+    setCanvasElements((prevElements) =>
+      updateElementsById(prevElements, selectedElement.id, (el) => ({
+        ...el,
+        style: newStyle,
+      }))
+    );
+
+    setSelectedElement((prev) => ({ ...prev, style: newStyle }));
+  };
+
+  // useEffect(() => {
+  //   // close EditText when clicking outside
+  //   const handleClickOutside = (e) => {
+  //     if (canvasRef.current && !canvasRef.current.contains(e.target)) {
+  //       setSelectedElement(null);
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClickOutside);
+  //   return () => document.removeEventListener("click", handleClickOutside);
+  // }, []);
+
+  const DeleteCanvasElement = () => {
+    const updatedCanvas = popDraggedElement(canvasElements, selectedElement.id);
+    setSelectedElement(null);
+    setCanvasElements(updatedCanvas.updated);
+  };
 
   return (
     <div className="mt-16">
-
       {/* ELEMENT LIST */}
       <ul className="menu bg-base-300 fixed  h-[90.85vh] p-2 [&>*]:my-2 z-0">
         <li>
@@ -249,8 +293,13 @@ const Home = () => {
         </li>
       </ul>
 
-      <div className={preview? `w-[100vw] h-[90vh] flex overflow-hidden`:`max-w-[95vw] flex  ml-16`}>
-
+      <div
+        className={
+          preview
+            ? `w-[100vw] h-[90vh] flex overflow-hidden`
+            : `max-w-[95vw] flex  ml-16`
+        }
+      >
         {/* ELEMENT DISPLAY */}
         <div className="w-[25%] ">
           <div className="p-4 pb-2  text-xs opacity-60 ">
@@ -276,13 +325,20 @@ const Home = () => {
             id="canvas"
             className={`${
               preview ? previewStyle : canvasStyle
-            } flex flex-wrap gap-1 items-start`}
+            } flex flex-wrap flex-start`}
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-          >  
+          >
             {canvasElements.map((el) => (
-              
-              <Canvas element={el} key={el.id} preview={preview} />
+              <Canvas
+                element={el}
+                key={el.id}
+                preview={preview}
+                selectedElement={selectedElement}
+                setSelectedElement={setSelectedElement}
+                popDraggedElement={popDraggedElement}
+                updateElementsById={updateElementsById}
+              />
             ))}
           </div>
           <button
@@ -291,6 +347,25 @@ const Home = () => {
           >
             {preview ? "Close Preview" : "Live Preview"}
           </button>
+
+          {selectedElement && !preview &&(
+            <div
+              style={{
+                position: "absolute",
+                left: "200px",
+                bottom: "10px",
+                zIndex: 1000,
+                minWidth: "300px",
+              }}
+            >
+              <StylingPanel
+                element={selectedElement}
+                // onClose={closeEditText}
+                onDelete={DeleteCanvasElement}
+                onUpdate={updateElementStyle}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

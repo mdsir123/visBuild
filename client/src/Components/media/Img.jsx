@@ -11,10 +11,8 @@ const Img = ({
   ...props
 }) => {
   return (
-    <img
-      className={className}
-      src={src}
-      alt={alt}
+    <div
+    className="w-[30%]"
       style={style}
       draggable={draggable}
       onDragStart={onDragStart}
@@ -22,7 +20,9 @@ const Img = ({
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       {...props}
-    ></img>
+    >
+      <img className={className} src={src} alt={alt} />
+    </div>
   );
 };
 

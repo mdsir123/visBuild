@@ -7,7 +7,6 @@ const Card = ({
   draggable,
   ...props
 }) => {
-  //e.log(props)
 
   return (
     <div className="card bg-base-100 w-[40%] shadow-sm"

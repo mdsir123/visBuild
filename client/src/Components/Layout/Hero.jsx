@@ -1,6 +1,8 @@
 import React from "react";
 
 const Hero = ({
+  className,
+  backgroundImage,
   onDragStart,
   onDragOver,
   onDragLeave,
@@ -10,25 +12,21 @@ const Hero = ({
   ...props
 }) => {
   return (
-    <div
-      style={style}
-      draggable={draggable}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
-      {...props}
-    >
+    <div>
       <div
-        className="hero h-[50%] min-w-full"
-        style={{
-          backgroundImage:
-            "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
-        }}
+        className={className}
+        // backgroundImage={backgroundImage}
+        style={style}
+        draggable={draggable}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        {...props}
       >
         <div className="hero-overlay"></div>
         <div className="hero-content text-neutral-content text-center">
-          <div className="max-w-md">
+          <div className="w-md">
             <h1 className="mb-5 text-5xl font-bold">Hello there</h1>
             <p className="mb-5">
               Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
@@ -41,6 +39,6 @@ const Hero = ({
       </div>
     </div>
   );
-}
+};
 
 export default Hero;
