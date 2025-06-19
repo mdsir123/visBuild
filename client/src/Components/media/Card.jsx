@@ -16,6 +16,7 @@ const Card = ({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
+      {...props}
     >
       <figure>
         <img src={props.imgUrl} alt={props.alt} />

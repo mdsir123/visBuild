@@ -97,7 +97,7 @@ export const FormElements = [
         "fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4",
     },
     preview: (
-      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+      <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-[50%] border p-4">
         <legend className="fieldset-legend">Login</legend>
 
         <label className="label">Email</label>
@@ -106,7 +106,7 @@ export const FormElements = [
         <label className="label">Password</label>
         <input type="password" className="input" placeholder="Password" />
 
-        <button className="btn btn-neutral mt-4">Login</button>
+        {/* <button className="btn btn-neutral mt-4">Login</button> */}
       </fieldset>
     ),
     isContainer: false,

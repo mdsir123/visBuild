@@ -11,18 +11,21 @@ const InputField = ({
   ...props
 }) => {
   return (
-    <input
-      type={type}
-      placeholder={placeholder}
-      className={className}
-      style={style}
+    <div
+    style={style}
       draggable={draggable}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       {...props}
+    >
+    <input
+      type={type}
+      placeholder={placeholder}
+      className={className}
     />
+    </div>
   );
 };
 

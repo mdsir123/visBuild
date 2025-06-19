@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const StylingPanel = ({ element, onDelete, onUpdate }) => {
   const { style, isContainer } = element;
 
@@ -22,8 +20,12 @@ const StylingPanel = ({ element, onDelete, onUpdate }) => {
   const [currDir = "row", currWrap = "wrap"] = (
     style.flexFlow || "row wrap"
   ).split(" ");
-  const [currJustify = "flex-start"] = (style.justifyContent || "flex-start").split(" ");
-  const [currAlign = "flex-start"] = (style.alignItems || "flex-start").split(" ");
+  const [currJustify = "flex-start"] = (
+    style.justifyContent || "flex-start"
+  ).split(" ");
+  const [currAlign = "flex-start"] = (style.alignItems || "flex-start").split(
+    " "
+  );
 
   const changeFlex = (e) => {
     const value = e.target.value;
@@ -186,16 +188,6 @@ const StylingPanel = ({ element, onDelete, onUpdate }) => {
   return (
     <>
       <div className="bg-white border-slate-200 shadow-lg border-2 rounded-lg p-2 min-w-max">
-        {/* <div className="flex items-center justify-between mb-1">
-            <h3 className="text-sm font-medium text-gray-700">Text Styling</h3>
-            <button
-              className="text-black text-sm font-bold hover:text-red-500 px-2 py-1"
-              onClick={onClose}
-            >
-              ✕
-            </button>
-          </div> */}
-
         <div className="flex flex-wrap gap-2 items-center">
           {/* Width-Height */}
           <div className="flex items-center">
@@ -751,18 +743,3 @@ const StylingPanel = ({ element, onDelete, onUpdate }) => {
 };
 
 export default StylingPanel;
-
-// const [paddingX, setPaddingX] = useState(parseInt(currPadX));
-//   const [paddingY, setPaddingY] = useState(parseInt(currPadY));
-//   const [marginX, setMarginX] = useState(parseInt(currMarX));
-//   const [marginY, setMarginY] = useState(parseInt(currMarY));
-//   const [borderWth, setBorderWth] = useState(parseInt(currBWidth));
-//   const [borderSty, setBorderStyle] = useState(currBStyle);
-//   const [borderCol, setBorderColor] = useState(currBColor);
-//   const [borderRad, setBorderRad] = useState(parseInt(currBRadius));
-//   const [elemWidth, setElemWidth] = useState(parseInt(currWidth));
-//   const [elemHeight, setElemHeight] = useState(parseInt(currHeight));
-//   const [flexDir, setFlexDir] = useState(currDir);
-//   const [flexWrap, setFlexWrap] = useState(currWrap);
-//   const [flexJustify, setFlexJustify] = useState(currJustify);
-//   const [flexAlign, setFlexAlign] = useState(currAlign);

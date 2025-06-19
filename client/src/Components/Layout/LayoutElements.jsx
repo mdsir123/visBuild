@@ -11,7 +11,7 @@ export const LayoutElements = [
     defaultProps: {
       tag: "div",
       className:
-        "w-fit h-[25%] rounded-lg  flex border-1 border-dashed p-2 m-2",
+        "w-fit h-[15%] rounded-lg  flex border-1 border-dashed p-2 m-2",
     },
     preview: (
       <div className="min-w-[150px] min-h-[75px] rounded-lg  flex border-1 border-dashed p-2 m-2">
@@ -93,7 +93,7 @@ export const LayoutElements = [
     type: "layout",
     component: Hero,
     defaultProps: {
-      className: "hero h-[50%] w-full",
+      className: "hero h-[50%] w-[100%]",
       backgroundImage:
         "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
     },

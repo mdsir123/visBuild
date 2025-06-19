@@ -11,7 +11,6 @@ const Home = () => {
   const [preview, setPreview] = useState(false);
   const [elements, setElements] = useState([]);
   const [selectedElement, setSelectedElement] = useState(null);
-  // const canvasRef = useRef(null);
 
   // export functionality array
 
@@ -37,8 +36,8 @@ const Home = () => {
         borderWidth: "2px",
         borderStyle: "dotted",
         borderRadius: "10px",
-        padding: "16px 16px",
-        margin: "10px",
+        padding: "10px 10px",
+        margin: "1px",
       },
       isContainer: element.isContainer,
       children: element.children,
@@ -62,9 +61,8 @@ const Home = () => {
         borderWidth: "2px",
         borderStyle: "dotted",
         borderRadius: "10px",
-        padding: "16px 16px",
-        margin: "10px",
-        // width:"fit-content",
+        padding: "10px 10px",
+        margin: "1px",
       },
       isContainer: element.isContainer,
       children: element.children,
@@ -159,17 +157,6 @@ const Home = () => {
 
     setSelectedElement((prev) => ({ ...prev, style: newStyle }));
   };
-
-  // useEffect(() => {
-  //   // close EditText when clicking outside
-  //   const handleClickOutside = (e) => {
-  //     if (canvasRef.current && !canvasRef.current.contains(e.target)) {
-  //       setSelectedElement(null);
-  //     }
-  //   };
-  //   document.addEventListener("click", handleClickOutside);
-  //   return () => document.removeEventListener("click", handleClickOutside);
-  // }, []);
 
   const DeleteCanvasElement = () => {
     const updatedCanvas = popDraggedElement(canvasElements, selectedElement.id);
@@ -360,7 +347,6 @@ const Home = () => {
             >
               <StylingPanel
                 element={selectedElement}
-                // onClose={closeEditText}
                 onDelete={DeleteCanvasElement}
                 onUpdate={updateElementStyle}
               />
