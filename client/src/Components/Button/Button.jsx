@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 
-const Button= ({
+const Button = ({
   label,
   className,
   onDragStart,
@@ -11,28 +11,33 @@ const Button= ({
   draggable,
   ...props
 }) => {
-    const onSpaceKeyDown = (e) =>{
-      if(e.code === 'Space' || e.keyCode === 32 || e.target.contentEditable === true) {
-        e.preventDefault()
-        const selection = window.getSelection()
-        const range = selection.getRangeAt(0)
-        range.insertNode(document.createTextNode(' '))
-        range.collapse(false)
-      }
-
-    }
+  const editableRef = useRef(null);
 
   return (
-    <button className={className} contentEditable={true}
+    <button
+      className={className}
       style={style}
       draggable={draggable}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      onKeyDown={(e)=>onSpaceKeyDown(e)}
-      {...props}>{label}</button>
+      {...props}
+    >
+      <span
+      onClick={(e)=>{        
+        e.stopPropagation()
+      }}
+        ref={editableRef}
+        contentEditable
+        suppressContentEditableWarning={true}
+        spellCheck={false}
+        style={{ outline: "none", display: "inline-block", minWidth: "2ch" }}
+      >
+        {label}
+      </span>
+    </button>
   );
-}
+};
 
 export default Button;

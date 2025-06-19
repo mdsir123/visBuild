@@ -7,7 +7,7 @@ export const ButtonElements = [
     type: "buttons",
     component:Button ,
     defaultProps: {
-      label:"Primary",
+      label:"Primary Button",
       className: "btn btn-primary w-[6vw]",
     },
     preview: (
@@ -23,7 +23,7 @@ export const ButtonElements = [
     type: "buttons",
     component:Button ,
     defaultProps: {
-      label:"Success",
+      label:"Success Button",
       className: "btn btn-success w-[6vw]",
     },
     preview: (
@@ -39,7 +39,7 @@ export const ButtonElements = [
     type: "buttons",
     component:Button ,
     defaultProps: {
-      label:"Warning",
+      label:"Warning Button",
       className: "btn btn-warning w-[6vw]",
     },
     preview: (
@@ -55,7 +55,7 @@ export const ButtonElements = [
     type: "buttons",
     component:Button ,
     defaultProps: {
-      label:"Error",
+      label:"Error Button",
       className: "btn btn-error w-[6vw]",
     },
     preview: (
