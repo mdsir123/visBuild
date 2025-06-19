@@ -1,11 +1,15 @@
 // App.jsx
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./authentication/Login"
+import Register from "./authentication/Register"
 import Navbar from "./Navbar";
 import Home from "./Home";
 import CanvasElementController from "./components/utils/CanvasElementController";
 
 const App = () => {
   
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   // removed canvasHTML useState for optim ising the code
 
   // Shared utility function
@@ -60,10 +64,25 @@ const App = () => {
 
   return (
     <>
-      <Navbar handleExport={exportHTMLAndCSS} />
-      <CanvasElementController>
-        <Home />
-      </CanvasElementController>
+
+    <Navbar handleExport={exportHTMLAndCSS}  />
+
+    <Router>
+      {isLoggedIn ? (
+        <>
+          
+          <CanvasElementController>
+            <Home />
+          </CanvasElementController>
+        </>
+      ) : (
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      )}
+    </Router>
     </>
   );
 };
